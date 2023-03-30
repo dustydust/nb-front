@@ -17,7 +17,7 @@
                 width="22"
                 height="22"
             />
-            <span class="pr-2 pl-2">{{ text }}</span>
+            <span class="pr-2 pl-2 whitespace-nowrap">{{ text }}</span>
             <BaseSvgIcon
                 v-if="iconPosition === 'right'"
                 class=""

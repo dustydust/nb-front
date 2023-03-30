@@ -87,6 +87,7 @@
                     iconName="align-left"
                     iconPosition="left"
                     color="white"
+                    @click="() => copyLikedToClipboard()"
                 />
                 <BButton
                     text="Mail results to me"
@@ -106,24 +107,28 @@
             <div class="text-base italic font-noto-sans px-12">{{ inputText }}</div>
 
             <div class="text-2xl pink-400 font-rubik text-center font-black mt-14">REVIEW OUTPUT</div>
-            <div class="instruction pt-2 pb-2 text-center text-xl">Tap to edit text. Swipe for feedback.</div>
+            <div class="instruction pt-2 pb-2 text-center text-xl">Tap to edit text</div>
             
             <div class="flex flex-col gap-2.5 items-center ">
-                <div v-for="(headline, index) in headlines" class="bg-gray-50 w-full p-8 flex  relative" :key="index">
+                <div v-for="(headline, index) in headlines" class="bg-gray-50 w-full p-8 flex relative" :key="index">
                     <span class="absolute top-3 right-3">
                         <BaseSvgIcon
                             v-if="liked[index] > 0"
-                            name="heart"
-                            fill="#ff0000"
+                            class="cursor-pointer"
+                            name="nb-heart"
+                            fill="#E30B5C"
                             width="24"
-                            height="24"
+                            height="22"
+                            @click="() => swapFeedback('negative', index)"
                         />
                         <BaseSvgIcon
                             v-else
-                            name="times"
+                            class="cursor-pointer"
+                            name="nb-cross"
                             fill="#000000"
                             width="24"
                             height="24"
+                            @click="() => swapFeedback('positive', index)"
                         />
                     </span>
                     <div class="text">
@@ -160,13 +165,13 @@
 
         data() {
             return {
-                currentStep: 1,
+                currentStep: 3,
                 currentHeadline: 1,
-                inputText: "",
+                inputText: "123",
                 feedbacks: { "positive": [], "negative": [] },
-                headlines: [],
+                headlines: ['a', 'b', 'c'],
                 correctedHeadlines: [],
-                liked: []
+                liked: [1, 0, 1]
             }
         },
 
@@ -189,15 +194,29 @@
             },
             nextStep() { this.currentStep++ },
             setFeedback(emotion, index) {
-                if (emotion == 'positive') this.liked[index] = 1
-                if (emotion == 'negative') this.liked[index] = 0
-                    
+                this.swapFeedback(emotion, index)
                 this.feedbacks[emotion].push(this.correctedHeadlines[index])
                 this.currentHeadline++
                 if (this.currentHeadline > this.headlines.length) this.nextStep()
             },
+            swapFeedback(emotion, index) {
+                emotion == 'positive' ? this.liked[index] = 1 : this.liked[index] = 0
+            },
             correctHeadline(index, value) {
                 this.correctedHeadlines[index] = value
+            },
+            copyLikedToClipboard() {
+                let likedHeadlines = []
+                let dislikedHeadlines = []
+                for (let idx in this.liked) {
+                    if (this.liked[idx] > 0) { 
+                        likedHeadlines.push(this.headlines[idx])
+                    }
+                    else { 
+                        dislikedHeadlines.push(this.headlines[idx])
+                    }
+                }
+                navigator.clipboard.writeText(likedHeadlines.join('\n') + '\n\n' + dislikedHeadlines.join('\n'));
             },
             fetchHeadlines() {
                 axios.post('https://OpenaiServer.denisleonov.repl.co/api/tasks/', { inputText: this.inputText, numHeadlines: 3, feedbacks: this.feedbacks })
