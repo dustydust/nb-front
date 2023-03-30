@@ -94,7 +94,25 @@
                     iconName="envelope-alt"
                     iconPosition="left"
                     color="white"
+                    @click="() => showMailForm()"
                 />
+                <div
+                    v-if="this.mailFormShowed"
+                    class="flex"
+                >
+                    <input
+                        class="rounded-2xl py-1 px-4 min-h-min border-2 border-black outline-none"
+                        placeholder="text@me.com"
+                    />
+                    <BButton
+                            class="ml-3"
+                            size="small"
+                            text="Send"
+                            iconName="message"
+                            iconPosition="right"
+                            color="white"
+                        />
+                </div>
                 <BButton
                     text="Re-Generate Headlines"
                     iconName="angle-right-b"
@@ -147,6 +165,11 @@
             </div>
         </div>
         <!-- STEP : END -->
+        <!-- STEP -->
+        <div v-if="currentStep == 5" class="steps step-2 text-black font-arvo">
+            <div class="instruction pt-5 pb-10 px-8">Whooops! Something went wrong! Try to wait for 5 seconds and try again! We will redirect you to start again.</div>
+        </div>
+        <!-- STEP : END -->
     </div>
 </template>
 
@@ -165,13 +188,15 @@
 
         data() {
             return {
-                currentStep: 3,
+                currentStep: 4,
                 currentHeadline: 1,
-                inputText: "123",
+                inputText: "",
                 feedbacks: { "positive": [], "negative": [] },
-                headlines: ['a', 'b', 'c'],
+                headlines: [],
                 correctedHeadlines: [],
-                liked: [1, 0, 1]
+                liked: [],
+                mailFormShowed: false,
+                maxAttempts: 10
             }
         },
 
@@ -181,9 +206,17 @@
                 this.fetchHeadlines()
             },
             regenerateHeadlines() {
-                this.currentStep = 2
                 this.clearBotState()
+                this.currentStep = 2
                 this.fetchHeadlines()
+            },
+            showMailForm() {
+                this.mailFormShowed = true
+            },
+            showError() {
+                this.clearBotState()
+                this.currentStep = 5
+                setTimeout(() => {this.currentStep = 1}, 4000)
             },
             clearBotState() {
                 this.currentHeadline = 1
@@ -222,6 +255,7 @@
                 axios.post('https://OpenaiServer.denisleonov.repl.co/api/tasks/', { inputText: this.inputText, numHeadlines: 3, feedbacks: this.feedbacks })
                 .then(response => {
                     let taskId = response.data.taskId
+                    let attempt = 1
                     console.log('Task posted, current task id: ' + taskId)
 
                     const checkTaskCompletionInterval = setInterval(async () => {
@@ -245,7 +279,14 @@
                             case 'error':
                                 console.log('Task ' + taskId + 'has error status :(')
                                 clearInterval(checkTaskCompletionInterval)
+                                this.showError()
                                 break
+                        }
+                        attempt++
+                        console.log("Attempt num is: ", attempt)
+                        if (attempt > this.maxAttempts) {
+                            clearInterval(checkTaskCompletionInterval)
+                            this.showError()
                         }
                     }, 2000)
                 })
