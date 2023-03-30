@@ -188,7 +188,7 @@
 
         data() {
             return {
-                currentStep: 4,
+                currentStep: 1,
                 currentHeadline: 1,
                 inputText: "",
                 feedbacks: { "positive": [], "negative": [] },
