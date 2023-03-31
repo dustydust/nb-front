@@ -207,7 +207,7 @@
             },
             regenerateHeadlines() {
                 this.clearBotState()
-                this.currentStep = 1
+                this.currentStep = 2
                 this.fetchHeadlines()
             },
             showMailForm() {
@@ -292,6 +292,7 @@
                 })
                 .catch(error => {
                     console.error(error);
+                    this.showError()
                 });
             }
         }
