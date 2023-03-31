@@ -118,7 +118,7 @@
                     iconName="angle-right-b"
                     iconPosition="right"
                     color="black"
-                    :action="() => generateHeadlines()"
+                    :action="() => regenerateHeadlines()"
                 />
             </div>
             <div class="text-2xl pink-400 font-rubik text-center font-black mt-14">YOUR REQUEST</div>
