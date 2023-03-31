@@ -207,7 +207,7 @@
             },
             regenerateHeadlines() {
                 this.clearBotState()
-                this.currentStep = 2
+                this.currentStep = 1
                 this.fetchHeadlines()
             },
             showMailForm() {
