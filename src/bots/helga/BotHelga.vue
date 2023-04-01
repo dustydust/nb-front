@@ -135,19 +135,19 @@ export default {
 
     data() {
         return {
-            currentStep: 3,
+            currentStep: 1,
             currentHeadline: 0,
             inputText: "",
             feedbacks: { "positive": [], "negative": [] },
             headlines: [
-                '1I’m ready to go. Let me know as much information as you can, and I’ll give you 5 options.',
-                '2I’m ready to go. Let me know as much information as you can, and I’ll give you 5 options.',
-                '3I’m ready to go. Let me know as much information as you can, and I’ll give you 5 options.',
+                // '1I’m ready to go. Let me know as much information as you can, and I’ll give you 5 options.',
+                // '2I’m ready to go. Let me know as much information as you can, and I’ll give you 5 options.',
+                // '3I’m ready to go. Let me know as much information as you can, and I’ll give you 5 options.',
             ],
             correctedHeadlines: [
-                '1I’m ready to go. Let me know as much information as you can, and I’ll give you 5 options.',
-                '2I’m ready to go. Let me know as much information as you can, and I’ll give you 5 options.',
-                '3I’m ready to go. Let me know as much information as you can, and I’ll give you 5 options.',
+                // '1I’m ready to go. Let me know as much information as you can, and I’ll give you 5 options.',
+                // '2I’m ready to go. Let me know as much information as you can, and I’ll give you 5 options.',
+                // '3I’m ready to go. Let me know as much information as you can, and I’ll give you 5 options.',
             ],
             liked: [],
             mailFormShowed: false,
